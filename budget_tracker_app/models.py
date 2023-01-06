@@ -37,6 +37,20 @@ class Transaction(models.Model):
             }
 
     @classmethod
+    def GetAllDistintTransactions(cls,user):
+        if user:
+            checkuser = User.objects.get(email=user)
+            disnitransactions = cls.objects.filter(user=checkuser).values("category").distinct()
+            return {
+                "status":True,
+                "data":disnitransactions
+            }
+        else:
+            return {
+                "status":False,
+            }
+
+    @classmethod
     def GetATransactions(cls,id):
         if id:
             alltransactions = cls.objects.filter(transactionid=id).values()

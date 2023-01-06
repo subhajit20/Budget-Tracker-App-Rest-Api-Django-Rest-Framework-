@@ -216,3 +216,27 @@ def UpdateATransaction(request):
             "status":False,
             "msg":"Something went wrong..."
         })
+
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def GetDistintCategory(request):
+    try:
+        flag = Transaction.GetAllDistintTransactions(request.user)
+        if flag["status"]:
+            return Response({
+                "status":True,
+                "msg":flag["data"]
+            })
+        else:
+            return Response({
+                "status":True,
+                "msg":"Failed to Update..."
+            })
+    except Exception as e:
+        print(e)
+        return Response({
+            "status":False,
+            "msg":"Something went wrong..."
+        })

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import dump,CreateTransaction,GetAllTransation,GetTransation_by_Category,GetTransation_by_Date,DeleteTransaction,GetATransaction,UpdateATransaction
+from .views import dump,CreateTransaction,GetAllTransation,GetTransation_by_Category,GetTransation_by_Date,DeleteTransaction,GetATransaction,UpdateATransaction,GetDistintCategory
 
 urlpatterns = [
     path("d1/", dump),
@@ -11,4 +11,5 @@ urlpatterns = [
     path("delete/",DeleteTransaction),
     path("updateATransaction/",UpdateATransaction),
     path("getatransaction/",GetATransaction),
+    path("getdistintransaction/",GetDistintCategory),
 ]
