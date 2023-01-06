@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from .serializer import TransactionSerializer,CategorySerializer,DateSerializer
+from .serializer import TransactionSerializer,CategorySerializer,DateSerializer,DeleteSerializer,UpdateionSerializer
 from .models import Transaction
 # Create your views here.
 
@@ -114,6 +114,96 @@ def GetTransation_by_Date(request):
                 return Response({
                     "status":False,
                     "msg":"Failed"
+                })
+        else:
+            return Response({
+                    "status":False,
+                    "msg":serializer.errors
+                })
+    except Exception as e:
+        print(e)
+        return Response({
+            "status":False,
+            "msg":"Something went wrong..."
+        })
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def DeleteTransaction(request):
+    try:
+        serializer = DeleteSerializer(data = request.data)
+        if serializer.is_valid():
+            flag = Transaction.DelTransactions(serializer.data["transactionid"])
+            if flag["status"]:
+                return Response({
+                    "status":True,
+                    "msg":"Deleted"
+                })
+            else:
+                return Response({
+                    "status":False,
+                    "msg":"Not Found"
+                })
+        else:
+            return Response({
+                    "status":False,
+                    "msg":serializer.errors
+                })
+    except Exception as e:
+        print(e)
+        return Response({
+            "status":False,
+            "msg":"Something went wrong..."
+        })
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def GetATransaction(request):
+    try:
+        serializer = DeleteSerializer(data = request.data)
+        if serializer.is_valid():
+            flag = Transaction.GetATransactions(serializer.data["transactionid"])
+            if flag["status"]:
+                return Response({
+                    "status":True,
+                    "msg":flag["data"]
+                })
+            else:
+                return Response({
+                    "status":False,
+                    "msg":"Not Found"
+                })
+        else:
+            return Response({
+                    "status":False,
+                    "msg":serializer.errors
+                })
+    except Exception as e:
+        print(e)
+        return Response({
+            "status":False,
+            "msg":"Something went wrong..."
+        })
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def UpdateATransaction(request):
+    try:
+        serializer = UpdateionSerializer(data = request.data)
+        if serializer.is_valid():
+            flag = Transaction.UpdateTransactions(**serializer.data)
+            if flag:
+                return Response({
+                    "status":True,
+                    "msg":"Updated Succesfully..."
+                })
+            else:
+                return Response({
+                    "status":True,
+                    "msg":"Failed to Update..."
                 })
         else:
             return Response({

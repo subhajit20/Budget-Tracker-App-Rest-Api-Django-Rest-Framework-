@@ -25,20 +25,65 @@ class Transaction(models.Model):
     def GetTransactions(cls,user):
         if user:
             checkuser = User.objects.get(email=user)
-            alltransactions = cls.objects.filter(user=checkuser).values_list("category","expensename","cost","date")
+            alltransactions = cls.objects.filter(user=checkuser).values()
+            print(alltransactions)
             return {
                 "status":True,
-                "data":list(alltransactions)
+                "data":alltransactions
             }
         else:
             return {
                 "status":False,
             }
+
+    @classmethod
+    def GetATransactions(cls,id):
+        if id:
+            alltransactions = cls.objects.filter(transactionid=id).values()
+            return {
+                "status":True,
+                "data":alltransactions
+            }
+        else:
+            return {
+                "status":False,
+            }
+
+    @classmethod
+    def DelTransactions(cls,id):
+        if id:
+            alltransactions = cls.objects.filter(transactionid=id).delete()
+            print(alltransactions,"delete")
+            return {
+                "status":True,
+                "data":"Successfully Deleted..."
+            }
+        else:
+            return {
+                "status":False,
+            }
+    
+    @classmethod
+    def UpdateTransactions(cls,**krgs):
+        try:
+            checkitem = cls.objects.get(transactionid=krgs["transactionid"])
+            checkitem.category = krgs["category"]
+            checkitem.expensename = krgs["expensename"]
+            checkitem.cost = krgs["cost"]
+
+            checkitem.save()
+            return True
+        except Exception as e:
+            return False
+
+
+
     @classmethod
     def GetTransactions_by_category(cls,user,cat):
         if user:
             checkuser = User.objects.get(email=user)
             alltransactions = cls.objects.filter(user=checkuser,category=cat).values_list("category","expensename","cost","date")
+            print(alltransactions)
             return {
                 "status":True,
                 "data":list(alltransactions)

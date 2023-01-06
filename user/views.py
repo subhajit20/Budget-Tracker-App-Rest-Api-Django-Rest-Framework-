@@ -24,6 +24,7 @@ def Register(request):
                 "msg":serialzer.errors
             })
     except Exception as e:
+        print(e)
         return Response({
             "status":False,
             "msg":"Something went wrong..."
@@ -37,15 +38,16 @@ def Login(request):
             flag = User.GetAUser(**serialzer.data)
             if flag["status"] :
                 user = User.objects.get(email=flag["user"][1])
-                data = Token.objects.get_or_create(user=user)
+                token, created  = Token.objects.get_or_create(user=user)
                 return Response({
                     "status":True,
-                    "token":data[0],
+                    "user":list(flag["user"]),
+                    "token":token.key,
                     "msg":"Successfully logged in..."
                 })
             else:
                 return Response({
-                    "status":True,
+                    "status":False,
                     "msg":"Invalid email and password"
                 })
         else:
@@ -60,3 +62,19 @@ def Login(request):
             "msg":"Something went wrong..."
         })
 
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def AuthUser(request):
+    try:
+        user = User.objects.filter(email=request.user).values_list("id","email","firstname","lastname")
+        return Response({
+            "status":True,
+            "user":list(user)[0]
+        })
+    except Exception as e:
+        print(e)
+        return Response({
+            "status":False,
+            "msg":"Something went wrong..."
+        })

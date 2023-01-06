@@ -43,11 +43,12 @@ class User(AbstractBaseUser):
         if krgs:
             checkuser = cls.objects.filter(email=krgs["email"]).values_list("id","email","password")
             userpassword = list(checkuser)[0][2]
+            print(list(checkuser))
             if len(checkuser) > 0:
                 checkpassword = check_password(krgs["password"],userpassword)
                 if checkpassword:
                     return {
-                        "user":checkuser[0],
+                        "user":list(checkuser)[0],
                         "status":True
                     }
                 else:

@@ -10,3 +10,12 @@ class CategorySerializer(serializers.Serializer):
 
 class DateSerializer(serializers.Serializer):
     date = serializers.DateField()
+
+class DeleteSerializer(serializers.Serializer):
+    transactionid = serializers.CharField()
+
+class UpdateionSerializer(serializers.Serializer):
+    transactionid = serializers.CharField()
+    category = serializers.CharField()
+    expensename = serializers.CharField()
+    cost = serializers.CharField()
