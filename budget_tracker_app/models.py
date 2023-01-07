@@ -96,8 +96,7 @@ class Transaction(models.Model):
     def GetTransactions_by_category(cls,user,cat):
         if user:
             checkuser = User.objects.get(email=user)
-            alltransactions = cls.objects.filter(user=checkuser,category=cat).values_list("category","expensename","cost","date")
-            print(alltransactions)
+            alltransactions = cls.objects.filter(user=checkuser,category=cat).values()
             return {
                 "status":True,
                 "data":list(alltransactions)
